@@ -9,4 +9,8 @@ export interface IGetRequestController extends IController {
   assignGetRequestCallback(route: string, callback: ExpressRequestCallback): void;
 }
 
+export interface IMiddlewareController extends IController {
+  assignMiddleware(callback: ExpressRequestCallback): void;
+}
+
 export interface IOmniController extends IGetRequestController {}

@@ -1,7 +1,23 @@
-import express from 'express';
-import {AccessTokenController} from "./access-token/accessToken.controller.js";
-const router = express.Router();
+import express, {Router} from 'express';
+import {IMiddlewareController} from "../interfaces/IController.js";
+import {ExpressMiddlewareCallback} from "../types/ExpressUtilityTypes.js";
+import {spotifyAccessToken} from "../middleware/spotifyAccessToken.middleware.js";
 
-router.use(new AccessTokenController().getRouter());
+export class UnifiedControllerRouter implements IMiddlewareController {
+  private router: Router;
 
-export default router;
+  constructor() {
+    this.router = express.Router();
+
+    this.assignMiddleware(spotifyAccessToken)
+    this.assignMiddleware((req, res) => {res.send("hi")})
+  }
+
+  assignMiddleware(callback: ExpressMiddlewareCallback) {
+    this.router.use(callback);
+  }
+
+  getRouter(): Router {
+    return this.router;
+  }
+}
