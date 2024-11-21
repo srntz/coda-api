@@ -1,8 +1,9 @@
-import express, {Router} from 'express';
+import express, {ErrorRequestHandler, Router} from 'express';
 import {IMiddlewareController} from "../interfaces/IController.js";
-import {ExpressMiddlewareCallback} from "../types/ExpressUtilityTypes.js";
+import {ExpressErrorHandlingMiddlewareCallback, ExpressMiddlewareCallback} from "../types/ExpressUtilityTypes.js";
 import {spotifyAccessToken} from "../middleware/spotifyAccessToken.middleware.js";
 import {RandomAlbumController} from "./random-album/randomAlbum.controller.js";
+import {spotifyRequestErrorHandler} from "../middleware/spotifyRequestErrorHandler.middleware.js";
 
 export class UnifiedControllerRouter implements IMiddlewareController {
   private router: Router;
@@ -12,9 +13,10 @@ export class UnifiedControllerRouter implements IMiddlewareController {
 
     this.assignMiddleware(spotifyAccessToken)
     this.assignMiddleware(new RandomAlbumController().getRouter())
+    this.assignMiddleware(spotifyRequestErrorHandler)
   }
 
-  assignMiddleware(callback: ExpressMiddlewareCallback) {
+  assignMiddleware(callback: ExpressMiddlewareCallback | ExpressErrorHandlingMiddlewareCallback) {
     this.router.use(callback);
   }
 
