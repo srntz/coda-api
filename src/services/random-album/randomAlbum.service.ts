@@ -3,7 +3,7 @@ import playlists from "../../data/playlists.js";
 import {IToken} from "../../interfaces/IToken.js";
 import PlaylistObjectFull = SpotifyApi.PlaylistObjectFull;
 import PlaylistTrackObject = SpotifyApi.PlaylistTrackObject;
-import {ISpotifyFullErrorObject} from "../../types/SpotifyApiUtilityTypes.js";
+import {ICodaErrorObject} from "../../types/SpotifyApiUtilityTypes.js";
 import AlbumObjectSimplified = SpotifyApi.AlbumObjectSimplified;
 
 // The number of playlists processed in one generation cycle
@@ -37,7 +37,7 @@ export class RandomAlbumService implements IService<AlbumObjectSimplified[]> {
     }
 
     if(this.albums.length < RETURN_ALBUM_COUNT) {
-      const error: ISpotifyFullErrorObject = {
+      const error: ICodaErrorObject = {
         error: {
           status: 408,
           message: "Generation timed out.",
@@ -99,7 +99,7 @@ export class RandomAlbumService implements IService<AlbumObjectSimplified[]> {
     const playlistData: object = await res.json();
 
     if(playlistData.hasOwnProperty("error")) {
-      throw new Error(JSON.stringify((playlistData as ISpotifyFullErrorObject)))
+      throw new Error(JSON.stringify((playlistData as ICodaErrorObject)))
     }
 
     return playlistData as PlaylistObjectFull;

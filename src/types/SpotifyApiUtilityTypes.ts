@@ -1,5 +1,5 @@
 import ErrorObject = SpotifyApi.ErrorObject;
 
-export interface ISpotifyFullErrorObject {
+export interface ICodaErrorObject {
   error: ErrorObject
 }
