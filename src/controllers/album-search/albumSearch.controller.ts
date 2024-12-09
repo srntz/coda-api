@@ -22,9 +22,9 @@ export class AlbumSearchController implements IController {
   }
 
   private GetAlbumSearchResults: ExpressRequestCallback = async (req: express.Request, res: express.Response, next: NextFunction) => {
-    const token = new SpotifyToken(req.cookies.spotifyToken).getToken();
-    const service = new AlbumSearchService(token, req.query.q as string)
     try{
+      const token = new SpotifyToken(req.cookies.spotifyToken).getToken();
+      const service = new AlbumSearchService(token, req.query.q as string)
       const result = await service.get()
       res.status(200).send(result)
     } catch(e) {

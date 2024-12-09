@@ -5,6 +5,7 @@ import {spotifyAccessToken} from "../middleware/spotifyAccessToken.middleware.js
 import {RandomAlbumController} from "./random-album/randomAlbum.controller.js";
 import {spotifyRequestErrorHandler} from "../middleware/spotifyRequestErrorHandler.middleware.js";
 import {AlbumSearchController} from "./album-search/albumSearch.controller.js";
+import {AuthController} from "./auth/auth.controller.js";
 
 export class UnifiedControllerRouter implements IMiddlewareController {
   private router: Router;
@@ -12,7 +13,8 @@ export class UnifiedControllerRouter implements IMiddlewareController {
   constructor() {
     this.router = express.Router();
 
-    this.assignMiddleware(spotifyAccessToken)
+    // this.assignMiddleware(spotifyAccessToken)
+    this.assignMiddleware(new AuthController().getRouter())
     this.assignMiddleware(new RandomAlbumController().getRouter())
     this.assignMiddleware(new AlbumSearchController().getRouter())
     this.assignMiddleware(spotifyRequestErrorHandler)
