@@ -14,3 +14,5 @@ app.use(cookieParser());
 app.use("/", new UnifiedControllerRouter().getRouter())
 
 app.listen(4000, () => {console.log("listening on port 4000!")});
+
+export default app
