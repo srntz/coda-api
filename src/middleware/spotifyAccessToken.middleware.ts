@@ -4,8 +4,9 @@ import jwt from "jsonwebtoken"
 
 export const spotifyAccessToken: ExpressMiddlewareCallback = async (req, res, next) => {
   let parsedToken: IToken;
-
-  if(!req.cookies.hasOwnProperty("spotifyToken")) {
+  console.log(req.cookies)
+  const cookies = {...req.cookies};
+  if(!cookies.hasOwnProperty("spotifyToken")) {
     try {
     const fetchedToken = await fetch("https://accounts.spotify.com/api/token", {
       method: "POST",
