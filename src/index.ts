@@ -8,11 +8,15 @@ import {UnifiedControllerRouter} from "./controllers/index.controller.js";
 dotenv.config();
 const app = express();
 
-app.use(cors())
+app.use(cors({
+  origin: "http://localhost:3000",
+  credentials: true,
+}))
+
 app.use(cookieParser());
 
 app.use("/", new UnifiedControllerRouter().getRouter())
 
-app.listen(4000, () => {console.log("listening on port 4000!")});
+app.listen(4111, () => {console.log("listening on port 4111!")});
 
 export default app

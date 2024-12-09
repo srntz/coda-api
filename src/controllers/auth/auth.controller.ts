@@ -43,11 +43,12 @@ export class AuthController implements IController {
         const encryptedToken = jwt.sign(parsedToken, process.env.CODA_JWT_SIGNATURE)
         res.cookie("spotifyToken", encryptedToken, { maxAge: parsedToken.expires_in * 1000, httpOnly: true });
         res.clearCookie("spotifyTokenError");
-        res.status(200).send();
       } else {
         res.cookie("spotifyTokenError", parsedToken.error)
-        res.status(401).send();
+        res.status(401).send()
       }
     }
+
+    res.status(200).send()
   }
 }
