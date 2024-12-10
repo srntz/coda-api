@@ -6,8 +6,18 @@ import PlaylistTrackObject = SpotifyApi.PlaylistTrackObject;
 import {ICodaErrorObject} from "../../types/SpotifyApiUtilityTypes.js";
 import AlbumObjectSimplified = SpotifyApi.AlbumObjectSimplified;
 
+interface IRandomAlbumObject extends AlbumObjectSimplified {
+  selected_track: {
+    name: string,
+    external_urls: {
+      spotify: string;
+    }
+  },
+  iframe_url: string
+}
+
 // The number of playlists processed in one generation cycle
-const PLAYLIST_COUNT = 5;
+const PLAYLIST_COUNT = 8;
 
 // The amount of albums that the service returns per call
 const RETURN_ALBUM_COUNT = 5;
@@ -63,7 +73,7 @@ export class RandomAlbumService implements IService<AlbumObjectSimplified[]> {
       this.tracks.push(...playlistData.tracks.items)
     }
 
-    this.inferAlbumsFromTracks()
+    await this.inferAlbumsFromTracks()
   }
 
   /**
@@ -109,7 +119,7 @@ export class RandomAlbumService implements IService<AlbumObjectSimplified[]> {
    * Fills the albums array from randomly selected tracks.
    * @private
    */
-  private inferAlbumsFromTracks() {
+  private async inferAlbumsFromTracks() {
     while(this.albums.length < RETURN_ALBUM_COUNT && this.tracks.length > 0) {
       const randomIndex = Math.floor(Math.random() * this.tracks.length)
       const currentTrack = this.tracks[randomIndex].track;
@@ -117,9 +127,23 @@ export class RandomAlbumService implements IService<AlbumObjectSimplified[]> {
 
       // Add an album to the selected albums array if album_type is "album" and it does not already exist in the selected albums array
       if(currentTrack.album.album_type === "album" && !selectedAlbumsIds.includes(currentTrack.album.id)) {
-        this.albums.push(currentTrack.album);
+        const embedUrl = await this.getEmbed(currentTrack.album.external_urls.spotify);
+        const albumObject: IRandomAlbumObject = {
+          ...currentTrack.album,
+          selected_track: {name: currentTrack.name, external_urls: {spotify: currentTrack.external_urls.spotify}},
+          iframe_url: embedUrl
+        }
+        this.albums.push(albumObject);
         this.tracks.splice(randomIndex, 1);
       }
     }
+  }
+
+  private async getEmbed(albumUrl: string) {
+    const res = await fetch(`https://open.spotify.com/oembed?url=${albumUrl}`)
+
+    const data = await res.json();
+
+    return data.iframe_url
   }
 }
