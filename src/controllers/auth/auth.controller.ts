@@ -41,7 +41,7 @@ export class AuthController implements IController {
 
       if(!parsedToken.hasOwnProperty("error")) {
         const encryptedToken = jwt.sign(parsedToken, process.env.CODA_JWT_SIGNATURE)
-        res.cookie("spotifyToken", encryptedToken, { maxAge: parsedToken.expires_in * 1000, httpOnly: true });
+        res.cookie("spotifyToken", encryptedToken, { maxAge: parsedToken.expires_in * 1000, httpOnly: true, sameSite: false });
         res.clearCookie("spotifyTokenError");
       } else {
         res.cookie("spotifyTokenError", parsedToken.error)

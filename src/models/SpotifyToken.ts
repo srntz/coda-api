@@ -6,6 +6,7 @@ export class SpotifyToken {
   private token: IToken;
 
   constructor(encryptedToken: string) {
+    console.log(this.token)
     try {
       this.token = jwt.verify(encryptedToken, process.env.CODA_JWT_SIGNATURE) as IToken;
     } catch (e) {
