@@ -8,8 +8,16 @@ import {UnifiedControllerRouter} from "./controllers/index.controller.js";
 dotenv.config();
 const app = express();
 
+const whitelist = ["https://coda-generate.vercel.app/", "http://localhost:3000"]
+
 app.use(cors({
-  origin: "http://localhost:3000",
+  origin: function (origin, callback) {
+    if(whitelist.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'))
+    }
+  },
   credentials: true,
 }))
 
