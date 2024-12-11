@@ -44,7 +44,7 @@ export class AuthController implements IController {
         res.cookie("spotifyToken", encryptedToken, { maxAge: parsedToken.expires_in * 1000, httpOnly: true, sameSite: "none", secure: true });
         res.clearCookie("spotifyTokenError");
       } else {
-        res.cookie("spotifyTokenError", parsedToken.error)
+        res.cookie("spotifyTokenError", parsedToken.error, {httpOnly: true, sameSite: 'none', secure: true});
         res.status(401).send()
       }
     }
